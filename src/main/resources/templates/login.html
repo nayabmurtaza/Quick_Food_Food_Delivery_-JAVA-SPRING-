@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Login | QUICK FOODS</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background: #f5f5f5;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column; /* Allows navbar to sit perfectly on top */
+}
+
+/* --- NAVBAR STYLES FROM HOME.HTML --- */
+.navbar {
+	background-color: #fff;
+	height: 70px;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 50px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.nav-logo a {
+	text-decoration: none;
+	color: #e74c3c;
+	font-size: 1.8rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.nav-links {
+	display: flex;
+	list-style: none;
+	gap: 20px;
+	align-items: center;
+}
+
+.nav-links a {
+	text-decoration: none !important;
+}
+
+.nav-links button {
+	background-color: #e74c3c;
+	color: #ffffff;
+	padding: 8px 22px;
+	border: none;
+	border-radius: 8px;
+	font-weight: 700;
+	font-size: 15px;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(231, 76, 60, 0.15);
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.nav-links button h2 {
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.nav-links button:hover {
+	background-color: #c0392b;
+	color: #ffffff;
+	box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+	transform: translateY(-1px);
+}
+
+.profile-dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-trigger {
+	background: #fff !important;
+	color: #333 !important;
+	border: 1px solid #ddd !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+	padding: 8px 16px !important;
+}
+
+.profile-trigger i {
+	font-size: 18px;
+	color: #e74c3c;
+}
+
+.username-text {
+	font-weight: 700;
+	color: #333;
+	font-size: 18px;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	margin-top: 10px;
+	background-color: white;
+	min-width: 200px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	border-radius: 12px;
+	overflow: hidden;
+	z-index: 1001;
+	border: 1px solid #eee;
+	padding: 5px 0;
+}
+
+.dropdown-menu.show {
+	display: block;
+}
+
+.dropdown-header {
+	padding: 12px 16px;
+	font-weight: bold;
+	color: #e74c3c;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+	background: #fffcfb;
+}
+
+.dropdown-menu a, .dropdown-menu button {
+	width: 100%;
+	text-align: left;
+	padding: 12px 16px;
+	background: none !important;
+	color: #444 !important;
+	border: none !important;
+	box-shadow: none !important;
+	border-radius: 0 !important;
+	font-size: 14px;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+	background-color: #f5f5f5 !important;
+	color: #e74c3c !important;
+}
+
+.dropdown-menu .logout-btn-item {
+	width: 100%;
+	text-align: left;
+	padding: 12px 16px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* --- CARD CONTAINMENT & ALIGNMENT --- */
+.auth-container {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 110px 20px 40px; /* Top margin to give space under fixed header navbar */
+}
+
+.auth-card {
+	background: #fff;
+	width: 100%;
+	max-width: 420px;
+	padding: 40px 30px;
+	border-radius: 20px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+	text-align: center;
+}
+
+h1 {
+	color: #333;
+	margin-bottom: 10px;
+	font-weight: 800;
+}
+
+p {
+	color: #666;
+	margin-bottom: 25px;
+	font-size: 14px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: 600;
+	color: #444;
+	font-size: 14px;
+}
+
+input {
+	width: 100%;
+	padding: 12px 15px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	font-size: 15px;
+	outline: none;
+	transition: 0.3s;
+}
+
+input:focus {
+	border-color: #e74c3c;
+}
+
+.btn-submit {
+	background: #e74c3c;
+	color: white;
+	border: none;
+	width: 100%;
+	padding: 12px;
+	border-radius: 10px;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+	margin-top: 10px;
+	transition: 0.3s;
+}
+
+.btn-submit:hover {
+	background: #c0392b;
+}
+
+.divider {
+	display: flex;
+	align-items: center;
+	margin: 25px 0;
+	color: #aaa;
+	font-size: 12px;
+}
+
+.divider::before, .divider::after {
+	content: "";
+	flex: 1;
+	height: 1px;
+	background: #ddd;
+	margin: 0 10px;
+}
+
+.social-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	width: 100%;
+	padding: 12px;
+	border-radius: 10px;
+	font-size: 15px;
+	font-weight: 600;
+	cursor: pointer;
+	margin-bottom: 12px;
+	text-decoration: none;
+	transition: 0.3s;
+	border: 1px solid #ddd;
+}
+
+.google-btn {
+	background: #fff;
+	color: #333;
+}
+
+.google-btn:hover {
+	background: #f9f9f9;
+}
+
+.github-btn {
+	background: #24292e;
+	color: white;
+	border: none;
+}
+
+.github-btn:hover {
+	background: #1a1e21;
+}
+
+.footer-text {
+	margin-top: 20px;
+	font-size: 14px;
+	color: #666;
+}
+
+.footer-text a {
+	color: #e74c3c;
+	text-decoration: none;
+	font-weight: 700;
+}
+
+.alert {
+	background: #fee2e2;
+	color: #ef4444;
+	padding: 12px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.success {
+	background: #dcfce7;
+	color: #15803d;
+	padding: 12px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+	font-size: 14px;
+	font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+	<nav class="navbar">
+		<div class="nav-logo">
+			<a th:href="@{/home}">QUICK FOODS</a>
+		</div>
+		<ul class="nav-links" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+			<li sec:authorize="isAuthenticated()"><a th:href="@{/cart}"><button><h2>Cart 🛒</h2></button></a></li>
+			<li sec:authorize="isAuthenticated()">
+				<button class="profile-trigger">
+					<i class="fa-solid fa-circle-user"></i> 
+					<span class="username-text" th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>
+				</button>
+				<div class="dropdown-menu">
+					<div class="dropdown-header">
+						<i class="fa-solid fa-user-tag"></i> Hi, <span th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>!
+					</div>
+					<a th:href="@{/profile}"><i class="fa-solid fa-user-pen"></i> Profile</a> 
+					<a th:href="@{/profile}"><i class="fa-solid fa-location-dot"></i> Addresses</a>
+					<form th:action="@{/logout}" method="post">
+						<button type="submit" class="logout-btn-item">
+							<i class="fa-solid fa-right-from-bracket"></i> Logout
+						</button>
+					</form>
+				</div>
+			</li>
+			<li sec:authorize="isAnonymous()"><a th:href="@{/signup}"><button>Sign Up</button></a></li>
+			
+		</ul>
+	</nav>
+
+	<div class="auth-container">
+		<div class="auth-card">
+			<h1>Welcome Back</h1>
+			<p>Login to place orders on QUICK FOODS</p>
+
+			<div th:if="${param.error}" class="alert">Invalid username or password!</div>
+			<div th:if="${param.registered}" class="success">Account created! Please log in.</div>
+
+			<form th:action="@{/login}" method="post">
+				<div class="form-group">
+					<label>Username</label> <input type="text" name="username" required placeholder="Enter username">
+				</div>
+				<div class="form-group">
+					<label>Password</label> <input type="password" name="password" required placeholder="Enter password">
+				</div>
+				<button type="submit" class="btn-submit">Login</button>
+			</form>
+
+			<div class="divider">OR CONTINUE WITH</div>
+
+			<a th:href="@{/oauth2/authorization/google}" class="social-btn google-btn"> 
+				<i class="fa-brands fa-google" style="color: #4285F4;"></i> Google
+			</a> 
+			<a th:href="@{/oauth2/authorization/github}" class="social-btn github-btn"> 
+				<i class="fa-brands fa-github"></i> GitHub
+			</a>
+
+			<div class="footer-text">
+				Don't have an account? <a th:href="@{/signup}">Sign Up</a>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const trigger = document.querySelector(".profile-trigger");
+			const menu = document.querySelector(".dropdown-menu");
+
+			if (trigger && menu) {
+				trigger.addEventListener("click", function(event) {
+					event.stopPropagation();
+					menu.classList.toggle("show");
+				});
+
+				document.addEventListener("click", function(event) {
+					if (!trigger.contains(event.target) && !menu.contains(event.target)) {
+						menu.classList.remove("show");
+					}
+				});
+			}
+		});
+	</script>
+</body>
+</html>

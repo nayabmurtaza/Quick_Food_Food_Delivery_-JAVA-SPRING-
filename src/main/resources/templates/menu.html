@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Food Menu</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background: #f5f5f5;
+	padding: 40px 20px;
+}
+
+.container {
+	max-width: 1300px;
+	margin: 80px auto auto;
+}
+
+/* Navbar Styles (Perfectly Matched with Home) */
+.navbar {
+	background-color: #fff;
+	height: 70px;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 50px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.nav-logo a {
+	text-decoration: none;
+	color: #e74c3c;
+	font-size: 1.8rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.nav-links {
+	display: flex;
+	list-style: none;
+	gap: 20px;
+	align-items: center;
+}
+
+/* Nav links standard clean link fix */
+.nav-links a {
+	text-decoration: none !important;
+}
+
+.nav-links button {
+	background-color: #e74c3c;
+	color: #ffffff;
+	padding: 8px 22px;
+	border: none;
+	border-radius: 8px;
+	font-weight: 700;
+	font-size: 15px;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(231, 76, 60, 0.15);
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.nav-links button h2 {
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.nav-links button:hover {
+	background-color: #c0392b;
+	color: #ffffff;
+	box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+	transform: translateY(-1px);
+}
+
+.nav-links button:active {
+	transform: translateY(1px);
+	box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+}
+
+/* --- Profile Dropdown System --- */
+.profile-dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-trigger {
+	background: #fff !important;
+	color: #333 !important;
+	border: 1px solid #ddd !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+	padding: 8px 16px !important;
+}
+
+.profile-trigger:hover {
+	background: #f9f9f9 !important;
+	transform: none !important;
+}
+
+.profile-trigger i {
+	font-size: 18px;
+	color: #e74c3c;
+}
+
+.username-text {
+	font-weight: 700;
+	color: #333;
+	font-size: 18px;
+}
+
+/* Dropdown Menu Box Hidden by Default */
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	margin-top: 10px;
+	background-color: white;
+	min-width: 200px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	border-radius: 12px;
+	overflow: hidden;
+	z-index: 1001;
+	border: 1px solid #eee;
+	padding: 5px 0;
+}
+
+/* Show on clicking */
+.dropdown-menu.show {
+	display: block;
+}
+
+.dropdown-header {
+	padding: 12px 16px;
+	font-weight: bold;
+	color: #e74c3c;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+	background: #fffcfb;
+}
+
+.dropdown-menu a, .dropdown-menu button {
+	width: 100%;
+	text-align: left;
+	padding: 12px 16px;
+	background: none !important;
+	color: #444 !important;
+	border: none !important;
+	box-shadow: none !important;
+	border-radius: 0 !important;
+	font-size: 14px;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	text-decoration: none;
+	transition: 0.2s;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+	background-color: #f5f5f5 !important;
+	color: #e74c3c !important;
+	transform: none !important;
+}
+
+/* Normalizes the form wrapper container */
+.dropdown-menu form {
+	display: block;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/* Ensures the inner logout button matches alignment */
+.dropdown-menu .logout-btn-item {
+	width: 100%;
+	text-align: left;
+	padding: 12px 16px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.dropdown-menu .logout-btn-item:hover {
+	background-color: #fff5f5 !important;
+	color: #c0392b !important;
+}
+
+/* Menu Custom Page Layout Components */
+.menu-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 30px;
+}
+
+.menu-card {
+	background: #fff;
+	border-radius: 20px;
+	overflow: hidden;
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+	display: flex;
+	flex-direction: column;
+}
+
+.menu-image {
+	width: 100%;
+	height: 220px;
+	object-fit: cover;
+}
+
+.menu-content {
+	padding: 25px;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.price {
+	font-size: 22px;
+	font-weight: 700;
+}
+
+.cart-btn {
+	background: #ff5200;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 10px;
+	cursor: pointer;
+}
+</style>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+	<nav class="navbar">
+		<div class="nav-logo">
+			<a th:href="@{/home}">QUICK FOODS</a>
+		</div>
+		<ul class="nav-links"
+			xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+			<li><a th:href="@{/home}"><button>
+						<h2>Home</h2>
+					</button></a></li>
+
+			<li sec:authorize="isAuthenticated()"><a th:href="@{/cart}"><button>
+						<h2>Cart 🛒</h2>
+					</button></a></li>
+
+			<!-- Logged In Users Dropdown Menu Block -->
+			<li sec:authorize="isAuthenticated()">
+				<div class="profile-dropdown">
+					<button class="profile-trigger">
+						<i class="fa-solid fa-circle-user"></i> <span
+							class="username-text"
+							th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>
+					</button>
+
+					<div class="dropdown-menu">
+						<div class="dropdown-header">
+							<i class="fa-solid fa-user-tag"></i> Hi, <span
+								th:text="${session.displayName != null ? session.displayName : #authentication.name}">
+								Username</span>!
+						</div>
+						<a th:href="@{/profile}"><i class="fa-solid fa-user-pen"></i>
+							Profile</a> <a th:href="@{/profile}"><i
+							class="fa-solid fa-location-dot"></i> Addresses</a>
+
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="logout-btn-item">
+								<i class="fa-solid fa-right-from-bracket"></i> Logout
+							</button>
+						</form>
+					</div>
+				</div>
+			</li>
+
+			<li sec:authorize="isAnonymous()"><a th:href="@{/signup}"><button>
+						<h2>Sign Up</h2>
+					</button></a></li>
+			<li sec:authorize="isAnonymous()"><a th:href="@{/login}"><button
+						class="btn-login">
+						<h2>Login</h2>
+					</button></a></li>
+		</ul>
+	</nav>
+
+	<div class="container">
+		<div style="text-align: center; margin-bottom: 40px;">
+			<h1 th:text="${restaurant != null} ? ${restaurant.name} : 'Menu'">Menu</h1>
+		</div>
+		<div class="menu-grid">
+			<div class="menu-card" th:each="menu : ${allMenusByRestaurant}">
+				<img th:src="${menu.imageUrl}" class="menu-image"
+					th:alt="${menu.itemName}">
+				<div class="menu-content">
+					<div
+						style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+						<h2 th:text="${menu.itemName}">Item Name</h2>
+						<span th:text="'⭐ ' + ${menu.rating}">⭐ 4.2</span>
+					</div>
+					<p th:text="${menu.description}">Description</p>
+					<div
+						style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+						<span class="price" th:text="'₹' + ${menu.price}">₹100</span>
+						<form th:action="@{/cart}" method="get">
+							<input type="hidden" name="menuId" th:value="${menu.menuId}">
+							<input type="hidden" name="quantity" value="1"> <input
+								type="hidden" name="restaurantId"
+								th:value="${menu.restaurantId}"> <input type="hidden"
+								name="action" value="add">
+							<button type="submit" class="cart-btn">Add To Cart</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const trigger = document.querySelector(".profile-trigger");
+			const menu = document.querySelector(".dropdown-menu");
+
+			if (trigger && menu) {
+				trigger.addEventListener("click", function(event) {
+					event.stopPropagation();
+					menu.classList.toggle("show");
+				});
+
+				document.addEventListener("click", function(event) {
+					if (!trigger.contains(event.target)
+							&& !menu.contains(event.target)) {
+						menu.classList.remove("show");
+					}
+				});
+			}
+		});
+	</script>
+
+	<div th:if="${conflictDetected}" id="cartConflictModal"
+		style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+		<div
+			style="background: white; padding: 30px; border-radius: 16px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); font-family: 'Segoe UI', sans-serif;">
+			<div style="font-size: 50px; color: #ff5200; margin-bottom: 15px;">⚠️</div>
+			<h3
+				style="margin-bottom: 12px; color: #333; font-size: 22px; font-weight: 700;">Replace
+				cart items?</h3>
+			<p
+				style="color: #666; font-size: 15px; line-height: 1.5; margin-bottom: 25px;">
+				Your cart contains dishes from another restaurant. Do you want to
+				discard your previous order items and add this new selection
+				instead?</p>
+			<div style="display: flex; gap: 12px; justify-content: center;">
+				<button onclick="closeCartModal()"
+					style="padding: 12px 20px; background: #eee; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: #333; flex: 1;">
+					Keep Old Order</button>
+				<a
+					th:href="@{/cart(action='add', menuId=${conflictMenuId}, restaurantId=${restaurant.id}, forceClear='true')}"
+					style="padding: 12px 20px; background: #ff5200; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; flex: 1; display: inline-block;">
+					Discard &amp; Add </a>
+			</div>
+		</div>
+	</div>
+
+	<script>
+    function closeCartModal() {
+        var modal = document.getElementById('cartConflictModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        // Clean up URL parameters cleanly
+        window.history.replaceState({}, document.title, window.location.pathname + "?restaurantId=" + [[${restaurant.id}]]);
+    }
+</script>
+
+</body>
+</html>

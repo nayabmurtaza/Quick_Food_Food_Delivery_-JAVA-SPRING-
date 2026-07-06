@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>My Profile | QUICK FOODS</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background: #f5f5f5;
+	color: #333;
+}
+
+/* GLOBAL NAVBAR STYLING */
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #fff;
+	padding: 15px 40px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+}
+
+.logo a {
+	color: #e74c3c;
+	font-weight: 800;
+	font-size: 24px;
+	text-decoration: none;
+}
+
+.nav-profile-container {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-trigger-btn {
+	background: #f8f9fa;
+	border: 1px solid #e2e8f0;
+	padding: 8px 16px;
+	border-radius: 20px;
+	font-weight: 600;
+	cursor: pointer;
+	color: #333;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	transition: all 0.2s;
+}
+
+.profile-trigger-btn:hover {
+	background: #edf2f7;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	margin-top: 8px;
+	width: 220px;
+	background: white;
+	border-radius: 8px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	z-index: 1010;
+}
+
+.nav-profile-container:hover .dropdown-menu {
+	display: block;
+}
+
+.dropdown-header {
+	padding: 12px 16px;
+	font-size: 13px;
+	font-weight: 700;
+	color: #718096;
+	background: #f7fafc;
+	border-bottom: 1px solid #edf2f7;
+}
+
+.dropdown-menu a, .dropdown-menu button {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	padding: 10px 16px;
+	text-decoration: none;
+	color: #4a5568;
+	font-size: 14px;
+	border: none;
+	background: none;
+	text-align: left;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+	background: #f7fafc;
+	color: #e74c3c;
+}
+
+.logout-btn-item {
+	color: #e53e3e !important;
+	border-top: 1px solid #edf2f7 !important;
+	margin-top: 4px;
+}
+
+/* CONTAINER STYLING */
+.container {
+	max-width: 600px;
+	margin: 50px auto;
+	padding: 20px;
+}
+
+.profile-card {
+	background: #fff;
+	padding: 40px;
+	border-radius: 20px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+	margin-bottom: 5px;
+	font-weight: 800;
+	color: #222;
+}
+
+.subtitle {
+	color: #777;
+	font-size: 14px;
+	margin-bottom: 30px;
+}
+
+.form-group {
+	margin-bottom: 22px;
+}
+
+label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: 600;
+	color: #444;
+	font-size: 14px;
+}
+
+input, textarea {
+	width: 100%;
+	padding: 12px 15px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	font-size: 15px;
+	outline: none;
+	transition: 0.3s;
+}
+
+input:focus, textarea:focus {
+	border-color: #e74c3c;
+}
+
+textarea {
+	resize: vertical;
+	min-height: 100px;
+}
+
+input[readonly] {
+	background-color: #f9f9f9;
+	color: #888;
+	cursor: not-allowed;
+}
+
+.btn-save {
+	background: #e74c3c;
+	color: white;
+	border: none;
+	width: 100%;
+	padding: 14px;
+	border-radius: 10px;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: 0.3s;
+	margin-top: 10px;
+}
+
+.btn-save:hover {
+	background: #c0392b;
+}
+
+.success-msg {
+	background: #dcfce7;
+	color: #15803d;
+	padding: 12px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+	font-size: 14px;
+	font-weight: 600;
+	text-align: center;
+}
+</style>
+</head>
+<body>
+
+	<nav class="navbar">
+		<div class="logo">
+			<a th:href="@{/home}">QUICK FOODS</a>
+		</div>
+		<div class="nav-profile-container">
+			<button class="profile-trigger-btn">
+				<i class="fa-solid fa-user"></i>
+				<span th:text="${session.displayName != null ? session.displayName : #authentication.name}">Account</span>
+				<i class="fa-solid fa-chevron-down" style="font-size: 10px; opacity: 0.7;"></i>
+			</button>
+			<div class="dropdown-menu">
+				<div class="dropdown-header">Hi, <span th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>!</div>
+				<a th:href="@{/profile}"><i class="fa-solid fa-user-pen"></i> Profile Settings</a>
+				<a th:href="@{/orders}"><i class="fa-solid fa-clock-rotate-left"></i> Order History</a>
+				<a th:href="@{/addresses}"><i class="fa-solid fa-location-dot"></i> Saved Addresses</a>
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="logout-btn-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="profile-card">
+			<h2>Account Profile</h2>
+			<p class="subtitle">Customize your preferences and saved delivery locations</p>
+
+			<div th:if="${param.success}" class="success-msg">
+				<i class="fa-solid fa-circle-check"></i> Profile details updated successfully!
+			</div>
+
+			<form th:action="@{/profile/update}" method="post">
+				<div class="form-group">
+					<label><i class="fa-solid fa-lock"></i> Account ID / Username</label> 
+					<input type="text" th:value="${user.username}" readonly>
+				</div>
+
+				<div class="form-group">
+					<label><i class="fa-solid fa-user"></i> Custom Profile Name</label>
+					<input type="text" name="displayName"
+						th:value="${user.displayName != null ? user.displayName : user.username}"
+						placeholder="Enter a name for this profile" required>
+				</div>
+
+				<div class="form-group">
+					<label><i class="fa-solid fa-phone"></i> Contact Phone Number</label> 
+					<input type="tel" name="phoneNumber"
+						th:value="${user.phoneNumber}"
+						placeholder="Enter your mobile number" required>
+				</div>
+
+				<div class="form-group">
+					<label><i class="fa-solid fa-location-dot"></i> Default Delivery Address</label>
+					<textarea name="address" th:text="${user.address}"
+						placeholder="Type your full house address, street details, and city pin code here..."></textarea>
+				</div>
+
+				<button type="submit" class="btn-save">Save Profile Changes</button>
+			</form>
+		</div>
+	</div>
+
+</body>
+</html>

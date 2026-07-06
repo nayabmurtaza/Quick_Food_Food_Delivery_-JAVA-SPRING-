@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Preparing Your Order | QUICK FOODS</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background: #f5f5f5;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	text-align: center;
+	padding: 20px;
+}
+
+.status-container {
+	background: white;
+	padding: 50px;
+	border-radius: 20px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	max-width: 500px;
+}
+
+.chef-emoji {
+	font-size: 80px;
+	animation: bounce 2s infinite;
+	margin-bottom: 20px;
+	display: inline-block;
+}
+
+h1 {
+	color: #333;
+	margin-bottom: 15px;
+}
+
+h3 {
+	color: #333;
+	margin-bottom: 15px;
+}
+
+p {
+	color: #666;
+	margin-bottom: 30px;
+	line-height: 1.6;
+}
+
+.btn {
+	background: #ff5200;
+	color: white;
+	padding: 12px 30px;
+	border-radius: 10px;
+	text-decoration: none;
+	font-weight: 600;
+	display: inline-block;
+	transition: 0.2s;
+}
+
+.btn:hover {
+	background: #e04800;
+}
+
+@keyframes bounce { 
+	0%, 100% {transform: translateY(0);}
+	50%{transform:translateY(-15px);}
+}
+</style>
+</head>
+<body>
+	<div class="status-container">
+		<span class="chef-emoji">👨‍🍳🔥</span>
+		<h1>We're on it!</h1>
+		<h3>It will take <span th:text="${restaurant.eta}"></span> to reach you!</h3>
+		<p>Your order has been received and is now being carefully
+			prepared by the restaurant kitchen staff.</p>
+
+		<a th:href="@{/home}" class="btn">Back to Home</a>
+	</div>
+</body>
+</html>

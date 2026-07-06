@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Your Cart | QUICK FOODS</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background: #f5f5f5;
+	padding: 110px 20px 40px;
+}
+
+/* Navbar Styles */
+.navbar {
+	background-color: #fff;
+	height: 70px;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 50px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.nav-logo a {
+	text-decoration: none;
+	color: #e74c3c;
+	font-size: 1.8rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.nav-links {
+	display: flex;
+	list-style: none;
+	gap: 20px;
+	align-items: center;
+}
+
+.nav-links a {
+	text-decoration: none !important;
+}
+
+.nav-links button {
+	background-color: #e74c3c;
+	color: #ffffff;
+	padding: 8px 22px;
+	border: none;
+	border-radius: 8px;
+	font-weight: 700;
+	font-size: 15px;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(231, 76, 60, 0.15);
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.nav-links button:hover {
+	background-color: #c0392b;
+	box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+	transform: translateY(-1px);
+}
+
+/* Profile Dropdown System */
+.profile-dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-trigger {
+	background: #fff !important;
+	color: #333 !important;
+	border: 1px solid #ddd !important;
+	padding: 8px 16px !important;
+}
+
+.username-text {
+	font-weight: 700;
+	color: #333;
+	font-size: 18px;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	margin-top: 10px;
+	background-color: white;
+	min-width: 200px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	border-radius: 12px;
+	overflow: hidden;
+	z-index: 1001;
+	border: 1px solid #eee;
+	padding: 5px 0;
+}
+
+.dropdown-menu.show {
+	display: block;
+}
+
+.dropdown-header {
+	padding: 12px 16px;
+	font-weight: bold;
+	color: #e74c3c;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+}
+
+.dropdown-menu button, .dropdown-menu a {
+	width: 100%;
+	text-align: left;
+	padding: 12px 16px;
+	background: none !important;
+	color: #444 !important;
+	border: none !important;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+/* Cart Container Layouts */
+h1 {
+	text-align: center;
+	margin-bottom: 40px;
+	color: #ff5200;
+}
+
+.cart-container {
+	width: 90%;
+	max-width: 1000px;
+	margin: auto;
+}
+
+/* Restaurant Header Banner */
+.restaurant-banner {
+	background: white;
+	padding: 15px 20px;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+	border-left: 5px solid #ff5200;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.restaurant-banner h3 {
+	font-size: 16px;
+	color: #333;
+}
+
+.restaurant-banner span {
+	color: #ff5200;
+	font-weight: 700;
+}
+
+.cart-item {
+	background: white;
+	border-radius: 18px;
+	display: flex;
+	justify-content: space-between;
+	padding: 20px;
+	margin-bottom: 20px;
+	align-items: center;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.item-info-group {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.dish-image {
+	width: 80px;
+	height: 80px;
+	border-radius: 12px;
+	object-fit: cover;
+}
+
+.quantity-btn {
+	background: #f5f5f5;
+	border: none;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.btn {
+	background: #ff5200;
+	color: white;
+	padding: 12px 30px;
+	border-radius: 10px;
+	text-decoration: none;
+	font-weight: 600;
+	display: inline-block;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+	<nav class="navbar">
+		<div class="nav-logo">
+			<a th:href="@{/home}">QUICK FOODS</a>
+		</div>
+		<ul class="nav-links" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+			<li><a th:href="@{/home}"><button>Home</button></a></li>
+			<li sec:authorize="isAuthenticated()">
+				<div class="profile-dropdown">
+					<button class="profile-trigger">
+						<i class="fa-solid fa-circle-user"></i> <span class="username-text" th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>
+					</button>
+					<div class="dropdown-menu">
+						<div class="dropdown-header">
+							<i class="fa-solid fa-user-tag"></i> Hi, <span th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>!
+						</div>
+						<a th:href="@{/profile}"><i class="fa-solid fa-user-pen"></i> Profile</a>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" style="color: #c0392b !important;">
+								<i class="fa-solid fa-right-from-bracket"></i> Logout
+							</button>
+						</form>
+					</div>
+				</div>
+			</li>
+			<li sec:authorize="isAnonymous()"><a th:href="@{/signup}"><button>Sign Up</button></a></li>
+			<li sec:authorize="isAnonymous()"><a th:href="@{/login}"><button>Login</button></a></li>
+		</ul>
+	</nav>
+
+	<h1>Your Cart 🛒</h1>
+	<div class="cart-container">
+		<div th:if="${session.cart != null and !session.cart.items.isEmpty()}">
+
+			<div class="restaurant-banner">
+				<i class="fa-solid fa-utensils" style="color: #ff5200;"></i>
+				<h3>Ordering From: <span th:text="${session.restaurantName}">Restaurant Name</span></h3>
+			</div>
+
+			<div class="cart-item" th:each="entry : ${session.cart.items.values()}">
+				<div class="item-info-group">
+					<img th:src="'https://loremflickr.com/150/150/food,dish/all?lock=' + ${entry.name.hashCode()}" class="dish-image" alt="Food Item" />
+
+					<div>
+						<h3 th:text="${entry.name}">Item Name</h3>
+						<p th:text="'₹' + ${entry.price}">Price</p>
+						<div th:with="itemId=${entry.id != null ? entry.id : entry.menuId}" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+							<a th:href="@{/cart(action='update', menuId=${itemId}, restaurantId=${session.restaurantId}, quantity=${entry.quantity - 1})}" class="quantity-btn" style="text-align: center; line-height: 30px; text-decoration: none; color: black;">-</a>
+							<span th:text="${entry.quantity}">1</span> 
+                            <a th:href="@{/cart(action='update', menuId=${itemId}, restaurantId=${session.restaurantId}, quantity=${entry.quantity + 1})}" class="quantity-btn" style="text-align: center; line-height: 30px; text-decoration: none; color: black;">+</a>
+						</div>
+					</div>
+				</div>
+
+				<div style="text-align: right;">
+					<div th:text="'₹' + (${entry.price} * ${entry.quantity})" style="font-size: 20px; font-weight: bold;">Total</div>
+					<a th:with="itemId=${entry.id != null ? entry.id : entry.menuId}" th:href="@{/cart(action='remove', menuId=${itemId}, restaurantId=${session.restaurantId})}" style="color: red; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 5px;">
+						<i class="fa-solid fa-trash-can"></i> Remove
+					</a>
+				</div>
+			</div>
+
+			<div style="text-align: right; margin-top: 30px;">
+				<h2 th:text="'Grand Total: ₹' + ${session.cart.totalPrice}">Grand Total</h2>
+				<div style="margin-top: 15px; display: flex; gap: 15px; justify-content: flex-end;">
+					<a th:href="${session.restaurantId != null} ? @{/menu(restaurantId=${session.restaurantId})} : @{/home}" class="btn" style="background: #333;">Add More Items</a> 
+                    <a th:href="@{/checkout}" class="btn">Proceed to Checkout ➔</a>
+				</div>
+			</div>
+		</div>
+
+		<div th:if="${session.cart == null or session.cart.items.isEmpty()}" style="text-align: center; background: white; padding: 40px; border-radius: 18px;">
+			<p>Your cart is empty!</p>
+			<a th:href="@{/home}" class="btn" style="margin-top: 20px;">Browse Restaurants</a>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const trigger = document.querySelector(".profile-trigger");
+			const menu = document.querySelector(".dropdown-menu");
+			if (trigger && menu) {
+				trigger.addEventListener("click", function(event) {
+					event.stopPropagation();
+					menu.classList.toggle("show");
+				});
+				document.addEventListener("click", function(event) {
+					if (!trigger.contains(event.target) && !menu.contains(event.target)) {
+						menu.classList.remove("show");
+					}
+				});
+			}
+		});
+	</script>
+</body>
+</html>

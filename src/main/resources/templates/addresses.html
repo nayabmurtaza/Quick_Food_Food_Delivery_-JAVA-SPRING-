@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Saved Addresses | QUICK FOODS</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background: #f8f9fa;
+}
+
+/* NAVBAR STYLING */
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #fff;
+	padding: 15px 40px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+}
+
+.logo a {
+	font-size: 22px;
+	font-weight: 800;
+	color: #e74c3c;
+	text-decoration: none;
+	tracking-wide;
+}
+
+.nav-profile-container {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-trigger-btn {
+	background: #f8f9fa;
+	border: 1px solid #e2e8f0;
+	padding: 8px 16px;
+	border-radius: 20px;
+	font-weight: 600;
+	cursor: pointer;
+	color: #333;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	transition: all 0.2s;
+}
+
+.profile-trigger-btn:hover {
+	background: #edf2f7;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	mt: 8px;
+	width: 220px;
+	background: white;
+	border-radius: 8px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	z-index: 1010;
+}
+
+.nav-profile-container:hover .dropdown-menu {
+	display: block;
+}
+
+.dropdown-header {
+	padding: 12px 16px;
+	font-size: 13px;
+	font-weight: 700;
+	color: #718096;
+	background: #f7fafc;
+	border-bottom: 1px solid #edf2f7;
+}
+
+.dropdown-menu a, .dropdown-menu button {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	padding: 10px 16px;
+	text-decoration: none;
+	color: #4a5568;
+	font-size: 14px;
+	border: none;
+	background: none;
+	text-align: left;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+	background: #f7fafc;
+	color: #e74c3c;
+}
+
+.logout-btn-item {
+	color: #e53e3e !important;
+	border-top: 1px solid #edf2f7 !important;
+	margin-top: 4px;
+}
+
+/* CONTAINER STYLING */
+.main-wrapper {
+	padding: 50px 20px;
+}
+
+.container {
+	max-width: 600px;
+	margin: 0 auto;
+	background: white;
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+	color: #333;
+	margin-bottom: 20px;
+	border-bottom: 2px solid #eee;
+	padding-bottom: 10px;
+}
+
+.address-card {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 15px;
+	margin-bottom: 15px;
+	display: flex;
+	align-items: start;
+	gap: 12px;
+}
+
+.tag-badge {
+	background: #e74c3c;
+	color: white;
+	padding: 2px 8px;
+	font-size: 11px;
+	font-weight: bold;
+	border-radius: 4px;
+	text-transform: uppercase;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: 600;
+	font-size: 14px;
+	color: #444;
+}
+
+input, select {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	outline: none;
+}
+
+.btn-submit {
+	background: #27ae60;
+	color: white;
+	border: none;
+	padding: 12px;
+	border-radius: 6px;
+	font-weight: bold;
+	width: 100%;
+	cursor: pointer;
+}
+
+.btn-back {
+	display: block;
+	text-align: center;
+	margin-top: 15px;
+	color: #e74c3c;
+	text-decoration: none;
+	font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+	<nav class="navbar">
+		<div class="logo">
+			<a th:href="@{/home}">QUICK FOODS</a>
+		</div>
+		<div class="nav-profile-container">
+			<button class="profile-trigger-btn">
+				<i class="fa-solid fa-user"></i> <span
+					th:text="${session.displayName != null ? session.displayName : #authentication.name}">Account</span>
+				<i class="fa-solid fa-chevron-down"
+					style="font-size: 10px; opacity: 0.7;"></i>
+			</button>
+			<div class="dropdown-menu">
+				<div class="dropdown-header">
+					Hi, <span
+						th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>!
+				</div>
+				<a th:href="@{/profile}"><i class="fa-solid fa-user-pen"></i>
+					Profile Settings</a> <a th:href="@{/orders}"><i
+					class="fa-solid fa-clock-rotate-left"></i> Order History</a> <a
+					th:href="@{/addresses}"><i class="fa-solid fa-location-dot"></i>
+					Saved Addresses</a>
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="logout-btn-item">
+						<i class="fa-solid fa-right-from-bracket"></i> Logout
+					</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+
+	<div class="main-wrapper">
+		<div class="container">
+			<h2>
+				<i class="fa-solid fa-location-dot" style="color: #e74c3c;"></i> My
+				Saved Addresses
+			</h2>
+
+			<div th:if="${savedAddresses.isEmpty()}"
+				style="text-align: center; color: #777; margin: 30px 0;">
+				<p>No addresses found! Save a delivery location below to get
+					started.</p>
+			</div>
+
+			<div th:each="addr : ${savedAddresses}" class="address-card">
+				<div style="margin-top: 3px;">
+					<span class="tag-badge" th:text="${addr.label}">Home</span>
+				</div>
+				<div>
+					<p style="color: #222; font-weight: 500;"
+						th:text="${addr.addressLine}">Address details</p>
+					<p style="color: #666; font-size: 13px; margin-top: 4px;"
+						th:text="'Phone: ' + ${addr.phoneNumber}"></p>
+				</div>
+			</div>
+
+			<h3
+				style="margin: 30px 0 15px; color: #333; border-top: 1px dashed #ddd; padding-top: 20px;">Add
+				New Address</h3>
+			<form th:action="@{/addresses/add}" method="post">
+				<div class="form-group">
+					<label>Address Designation Tag</label> <select name="label">
+						<option value="Home">Home</option>
+						<option value="Work">Work</option>
+						<option value="Other">Other</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Complete Street Address</label> <input type="text"
+						name="addressLine"
+						placeholder="Flat/House No, Building, Area details" required>
+				</div>
+				<div class="form-group">
+					<label>Contact Phone Number</label> <input type="tel"
+						name="phoneNumber" placeholder="10-digit mobile number" required>
+				</div>
+				<button type="submit" class="btn-submit">+ Save Delivery
+					Location</button>
+			</form>
+
+			<a th:href="@{/home}" class="btn-back">← Back to Marketplace</a>
+		</div>
+	</div>
+</body>
+</html>

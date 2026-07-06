@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>QUICK FOODS | Restaurants</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background-color: #f4f4f4;
+	padding: 100px 20px 20px;
+	/* Slight adjust top-padding for cleaner title visibility */
+}
+
+/* Navbar Styles (Identical Matching) */
+.navbar {
+	background-color: #fff;
+	height: 70px;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 50px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.nav-logo a {
+	text-decoration: none;
+	color: #e74c3c;
+	font-size: 1.8rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.nav-links {
+	display: flex;
+	list-style: none;
+	gap: 20px;
+	align-items: center;
+}
+
+/* Nav links standard clean link fix */
+.nav-links a {
+	text-decoration: none !important;
+}
+
+.nav-links button {
+	background-color: #e74c3c;
+	color: #ffffff;
+	padding: 8px 22px;
+	border: none;
+	border-radius: 8px;
+	font-weight: 700;
+	font-size: 15px;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(231, 76, 60, 0.15);
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.nav-links button h2 {
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.nav-links button:hover {
+	background-color: #c0392b;
+	color: #ffffff;
+	box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+	transform: translateY(-1px);
+}
+
+.nav-links button:active {
+	transform: translateY(1px);
+	box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+}
+
+/* --- Profile Dropdown System --- */
+.profile-dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-trigger {
+	background: #fff !important;
+	color: #333 !important;
+	border: 1px solid #ddd !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+	padding: 8px 16px !important;
+}
+
+.profile-trigger:hover {
+	background: #f9f9f9 !important;
+	transform: none !important;
+}
+
+.profile-trigger i {
+	font-size: 18px;
+	color: #e74c3c;
+}
+
+.username-text {
+	font-weight: 700;
+	color: #333;
+	font-size: 18px;
+}
+
+/* Dropdown Menu Box Hidden by Default */
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	margin-top: 10px;
+	background-color: white;
+	min-width: 200px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	border-radius: 12px;
+	overflow: hidden;
+	z-index: 1001;
+	border: 1px solid #eee;
+	padding: 5px 0;
+}
+
+/* Show on clicking */
+.dropdown-menu.show {
+	display: block;
+}
+
+.dropdown-header {
+	padding: 12px 16px;
+	font-weight: bold;
+	color: #e74c3c;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+	background: #fffcfb;
+}
+
+.dropdown-menu a, .dropdown-menu button {
+	width: 100%;
+	text-align: left;
+	padding: 12px 16px;
+	background: none !important;
+	color: #444 !important;
+	border: none !important;
+	box-shadow: none !important;
+	border-radius: 0 !important;
+	font-size: 14px;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	text-decoration: none;
+	transition: 0.2s;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+	background-color: #f5f5f5 !important;
+	color: #e74c3c !important;
+	transform: none !important;
+}
+
+/* Normalizes the form wrapper container */
+.dropdown-menu form {
+	display: block;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/* Ensures the inner logout button matches alignment */
+.dropdown-menu .logout-btn-item {
+	width: 100%;
+	text-align: left;
+	padding: 12px 16px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.dropdown-menu .logout-btn-item:hover {
+	background-color: #fff5f5 !important;
+	color: #c0392b !important;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 25px;
+}
+
+/* Underline fix selector rule */
+.restaurant-link, .restaurant-link:hover {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.restaurant-link * {
+	text-decoration: none !important;
+}
+
+.restaurant-card {
+	background: #fff;
+	border-radius: 15px;
+	overflow: hidden;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	transition: 0.3s;
+}
+
+.restaurant-card:hover {
+	transform: translateY(-5px);
+}
+
+.image-container {
+	position: relative;
+	height: 180px;
+}
+
+.image-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.eta-badge {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	background: rgba(255, 255, 255, 0.9);
+	padding: 5px 10px;
+	border-radius: 20px;
+	font-weight: bold;
+}
+
+.content {
+	padding: 15px;
+}
+
+.name-rating {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.name {
+	font-size: 1.2rem;
+	font-weight: bold;
+	color: #333;
+}
+
+.rating {
+	background: #27ae60;
+	color: white;
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+</style>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+	<nav class="navbar">
+		<div class="nav-logo">
+			<a th:href="@{/home}">QUICK FOODS</a>
+		</div>
+		<ul class="nav-links"
+			xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+			<li sec:authorize="isAuthenticated()"><a th:href="@{/cart}"><button>
+						<h2>Cart 🛒</h2>
+					</button></a></li>
+
+			<!-- Matches Menu Page Dropdown Interface Design -->
+			<li sec:authorize="isAuthenticated()">
+				<button class="profile-trigger">
+					<i class="fa-solid fa-circle-user"></i> <span class="username-text"
+						th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>
+				</button>
+
+				<div class="dropdown-menu">
+					<div class="dropdown-header">
+						Hi, <span
+							th:text="${session.displayName != null ? session.displayName : #authentication.name}">Username</span>!
+					</div>
+					<a th:href="@{/profile}"><i class="fa-solid fa-user-pen"></i>
+						Profile Settings</a> <a th:href="@{/orders}"><i
+						class="fa-solid fa-clock-rotate-left"></i> Order History</a> <a
+						th:href="@{/addresses}"><i class="fa-solid fa-location-dot"></i>
+						Saved Addresses</a>
+					<form th:action="@{/logout}" method="post">
+						<button type="submit" class="logout-btn-item">
+							<i class="fa-solid fa-right-from-bracket"></i> Logout
+						</button>
+					</form>
+				</div>
+				</div>
+			</li>
+
+			<li sec:authorize="isAnonymous()"><a th:href="@{/signup}"><button>Sign
+						Up</button></a></li>
+			<li sec:authorize="isAnonymous()"><a th:href="@{/login}"><button>Login</button></a></li>
+		</ul>
+	</nav>
+
+	<header style="text-align: center; margin-bottom: 40px;">
+		<h1>Top Restaurants Near You</h1>
+	</header>
+
+	<div class="container">
+		<a th:each="restaurant : ${allRestaurants}"
+			th:href="@{/menu(restaurantId=${restaurant.id})}"
+			class="restaurant-link">
+			<div class="restaurant-card">
+				<div class="image-container">
+					<img th:src="${restaurant.imageUrl}" th:alt="${restaurant.name}">
+					<span class="eta-badge" th:text="${restaurant.eta}">30 mins</span>
+				</div>
+				<div class="content">
+					<div class="name-rating">
+						<span class="name" th:text="${restaurant.name}">Restaurant
+							Name</span> <span class="rating" th:text="'★ ' + ${restaurant.rating}">★
+							4.5</span>
+					</div>
+					<p style="color: #666; margin: 10px 0;"
+						th:text="${restaurant.description}">Description</p>
+					<p
+						style="color: #999; border-top: 1px solid #eee; padding-top: 10px;"
+						th:text="${restaurant.address}">Address</p>
+				</div>
+			</div>
+		</a>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const trigger = document.querySelector(".profile-trigger");
+			const menu = document.querySelector(".dropdown-menu");
+
+			if (trigger && menu) {
+				trigger.addEventListener("click", function(event) {
+					event.stopPropagation();
+					menu.classList.toggle("show");
+				});
+
+				document.addEventListener("click", function(event) {
+					if (!trigger.contains(event.target)
+							&& !menu.contains(event.target)) {
+						menu.classList.remove("show");
+					}
+				});
+			}
+		});
+	</script>
+
+</body>
+</html>

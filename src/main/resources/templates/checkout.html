@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Secure Checkout | QUICK FOODS</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+	background: #f4f4f4;
+	padding: 60px 20px;
+}
+
+.checkout-box {
+	max-width: 600px;
+	margin: 0 auto;
+	background: white;
+	padding: 40px;
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-section {
+	margin-bottom: 25px;
+}
+
+label {
+	display: block;
+	margin-bottom: 12px;
+	font-weight: 700;
+	font-size: 16px;
+	color: #222;
+}
+
+.address-option {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 15px;
+	margin-bottom: 12px;
+	display: flex;
+	gap: 12px;
+	align-items: start;
+	cursor: pointer;
+}
+
+.address-option input {
+	margin-top: 4px;
+}
+
+.btn-manage {
+	display: inline-block;
+	background: #e74c3c;
+	color: white;
+	padding: 8px 16px;
+	border-radius: 6px;
+	text-decoration: none;
+	font-size: 13px;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
+select {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+}
+
+.btn-place {
+	width: 100%;
+	background: #27ae60;
+	color: white;
+	padding: 14px;
+	border: none;
+	border-radius: 8px;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+	margin-top: 15px;
+}
+</style>
+</head>
+<body>
+	<div class="checkout-box">
+		<h2>Complete Your Purchase</h2>
+		<br>
+
+		<div th:if="${param.error}"
+			style="color: red; margin-bottom: 15px; font-weight: bold;">Please
+			add and select a valid delivery address!</div>
+
+		<form th:action="@{/placeOrder}" method="post">
+			<div class="form-section">
+				<label>Choose Shipping Address</label> <a th:href="@{/addresses}"
+					class="btn-manage">+ Add / Manage Addresses</a>
+
+				<div th:if="${savedAddresses.isEmpty()}"
+					style="padding: 15px; border: 1px dashed red; border-radius: 8px; text-align: center; color: #555;">
+					No saved locations discovered. Click the button above to add a
+					phone number and delivery location to continue!</div>
+
+				<div th:each="addr, iter : ${savedAddresses}" class="address-option">
+					<input type="radio" name="selectedAddressId" th:value="${addr.id}"
+						th:id="'addr-' + ${addr.id}" th:checked="${iter.index == 0}"
+						required> <label th:for="'addr-' + ${addr.id}"
+						style="font-weight: 500; font-size: 14px; cursor: pointer; display: inline;">
+						<strong th:text="'[' + ${addr.label} + '] '">Home</strong> <span
+						th:text="${addr.addressLine}">Line context</span> <br>
+					<span style="font-size: 12px; color: #666;"
+						th:text="'Contact: ' + ${addr.phoneNumber}">Phone</span>
+					</label>
+				</div>
+			</div>
+
+			<div class="form-section">
+				<label>Payment Method Selection</label> <select name="paymentMethod">
+					<option value="COD">Cash On Delivery (COD)</option>
+					<option value="UPI">UPI / Net Banking Digital Wallets</option>
+				</select>
+			</div>
+
+			<button type="submit" class="btn-place"
+				th:disabled="${savedAddresses.isEmpty()}">Confirm & Place
+				Order</button>
+		</form>
+	</div>
+</body>
+</html>
