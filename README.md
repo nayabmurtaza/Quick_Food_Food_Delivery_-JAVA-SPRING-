@@ -29,6 +29,7 @@ User registration and authorization workflows are managed via an isolated securi
 When a consumer navigates to a designated restaurant node, the application queries underlying data stores to compile and project menu arrays dynamically using structural data iteration flags (`th:each="menu : ${allMenusByRestaurant}"`).
 
 <img width="1896" height="862" alt="Screenshot 2026-07-04 193624" src="https://github.com/user-attachments/assets/4882acba-dfa6-4332-9db6-47bbbae6ec7e" />
+
 ### 3. Cross-Restaurant Cart Session Guardrails
 State coherence within the consumer shopping experience enforces a strict, isolated single-merchant constraint pipeline to protect backend transaction items.
 
